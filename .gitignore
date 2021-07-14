@@ -1,0 +1,12 @@
+__pycache__/
+my_blog/__pycache__/
+venv/
+.idea
+my_blog/database.db
+my_blog/errors/__pycache__/
+my_blog/main/__pycache__/
+my_blog/posts/__pycache__/
+my_blog/static/profile_pics/
+my_blog/users/__pycache__/
+
+

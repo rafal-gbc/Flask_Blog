@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block title %}Account{% endblock %}
+{% block main_image %}url({{ url_for('static', filename='main_pics/home-bg.jpg') }})"{% endblock %}
+{% block content %}
+    <main class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <img class="rounded-circle account-img" src="{{ image_file }}">
+                    <div class="media-body">
+                        <h2 class="account-heading">User Name: {{ current_user.username }}</h2>
+                        <p class="text-secondary">Email: {{ current_user.email }}</p>
+                        <div class="form-floating mb-5">
+                            <form action="#" method="POST" enctype="multipart/form-data">
+                                {{ form.hidden_tag() }}
+                                <legend class="border-bottom mb-4">Account Info</legend>
+                                <div class="form-group">
+                                    {{ form.username.label(class="form-control-label") }}
+                                    {% if form.username.errors %}
+                                        {{ form.username(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.username.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.username(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.email.label(class="form-control-label") }}
+                                    {% if form.email.errors %}
+                                        {{ form.email(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.email.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.email(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.picture.label() }}
+                                    {{ form.picture(class="text-primary btn") }}
+                                    {% if form.picture.errors %}
+                                        {% for error in form.picture.errors %}
+                                            <span class="text-danger">{{ error }}</span></br>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group d-flex justify-content-center">
+                                    <div class="btn text-center">{{ form.submit(class="btn btn-primary text-uppercase") }}</div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock content %}
+

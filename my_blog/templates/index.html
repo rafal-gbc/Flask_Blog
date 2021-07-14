@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block main_image %}url({{ url_for('static', filename='main_pics/home-bg.jpg') }}){% endblock %}
+
+{% block header %}
+    <div class="site-heading">
+        <h1>Personal Blog</h1>
+        <span class="subheading">A Blog to show things</span>
+    </div>
+{% endblock header %}
+
+{% block content %}
+    <!-- Main Content-->
+    <main class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    {% for post in posts.items %}
+                        <!-- Post preview-->
+                        <div class="post-preview">
+                            <a href="{{ url_for('posts.display_post', post_id=post.id) }}">
+                                <h2 class="post-title">{{ post.title }}</h2>
+                                <h3 class="post-subtitle">{{ post.sub_title }}</h3>
+                            </a>
+                            <p class="post-meta">
+                                Posted by
+                                <a href="{{ url_for('posts.display_post', post_id=post.id) }}">{{ post.author.username }}</a>
+                                on {{ post.date_posted.strftime('%B-%m-%Y') }}
+                            </p>
+                        </div>
+                        <!-- Divider-->
+                        <hr class="my-4"/>
+                    {% endfor %}
+                    <!-- Pager-->
+                    <div>
+                        {% if posts.has_prev %}
+                            <a class="btn btn-primary text-uppercase float-start" href="{{ url_for('main.index', page=posts.prev_num) }}">← Newer Posts</a>
+                        {% endif %}
+                        {% if posts.has_next %}
+                            <a class="btn btn-primary text-uppercase float-end" href="{{ url_for('main.index', page=posts.next_num) }}">Older Posts →</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

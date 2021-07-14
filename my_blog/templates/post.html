@@ -1,0 +1,131 @@
+{% extends "layout.html" %}
+{% block title %}Post{% endblock %}
+{% block main_image %}url({{ url_for('static', filename='main_pics/post-bg.jpg') }}){% endblock %}
+{% block header %}
+    {% if post.title %}
+        <div class="post-heading">
+            <h1>{{ post.title }}</h1>
+            <h2 class="subheading">{{ post.sub_title }}</h2>
+            <span class="meta">
+                Posted by
+                <a class=""
+                   href="{{ url_for('users.user_posts', username=post.author.username) }}">{{ post.author.username }}</a>
+                on {{ post.date_posted.strftime('%B-%m-%Y') }}
+            </span>
+        </div>
+    {% else %}
+        <div class="post-heading">
+            <h1>Personal Blog</h1>
+            <span class="subheading">A Blog to show things</span>
+        </div>
+    {% endif %}
+{% endblock header %}
+{% block content %}
+    <!-- Post Content-->
+    <article class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="text-center">
+                        <img class="mr-3 rounded-circle"
+                             src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}"
+                             alt="Generic placeholder image" style="max-width:50px">
+                        <span style="margin-left: 1em; font-size: larger"><a class="" href="{{ url_for('users.user_posts', username=post.author.username) }}">{{ post.author.username }}</a></span>
+                    </div>
+                    <!-- Divider-->
+                    <hr class="my-4"/>
+                    <div><img class="img-responsive" src="{{ url_for('static', filename='post_pics/'+ post.image_file) }}" width="100%"></div>
+                    <p>{{ post.content }}</p>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    {% if post.author == current_user %}
+                        <div class="d-flex justify-content-between" id="posteditt">
+                            <a class="text-danger btn text-start" data-bs-toggle="modal"
+                               data-bs-target="#deleteModal">Delete
+                                Post</a>
+                            <a class="text-primary btn text-end"
+                               href="{{ url_for('posts.update_post', post_id=post.id) }}">Edit Post</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </article>
+
+
+    <!-- Comments Content-->
+    <article class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <h2>Comments</h2>
+                    <!-- Divider-->
+                    <hr class="my-4"/>
+                    <div class="comment-section">
+                        {% for comment in post.comments %}
+                            <div class="">
+                                <div class="d-flex justify-content-between mt-2">
+                                    <div class="d-flex flex-row">
+                                        <div class="user-image"><img
+                                                src="{{ url_for('static', filename='profile_pics/' + comment.author.image_file) }}"
+                                                width="40" class="rounded-circle"></div>
+                                        <div class="d-flex flex-column">
+                                            <h6 class="mb-0">{{ comment.author.username }}</h6>
+                                        </div>
+                                    </div>
+                                    <div><span class="meta">{{ comment.timestamp.strftime('%H:%M %d-%B-%Y') }}</span>
+                                    </div>
+                                </div>
+                                <p class="content">{{ comment.body }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="new-comment-section">
+                        {% if current_user.is_authenticated %}
+                            <form method="POST" action="">
+                        {{ form.hidden_tag() }}
+
+                            </form>
+                            <div><input class="form-control" id="newComment" placeholder="Write a comment...">
+                                <div class="mt-2 d-flex justify-content-center">
+                                    <button type="button" class="text-primary btn"
+                                            onClick="addComment(document.getElementById('newComment').value, {{ post.id }}, '{{ current_user.username }}')">
+                                        Add Comment
+                                    </button>
+                                    <button class="btn text-secondary"
+                                            onClick="document.getElementById('newComment').value =''">Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        {% else %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Delete Post?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5><span class="text-danger">Deleting your post is irreversible!</span> Do you really want to
+                        delete
+                        this post?</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <form action="{{ url_for('posts.delete_post', post_id=post.id) }}" method="POST">
+                        <input class="btn btn-danger" type="submit" value="Delete">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

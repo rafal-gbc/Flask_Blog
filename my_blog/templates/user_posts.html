@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block title %}All Posts{% endblock %}
+{% block main_image %}url({{ url_for('static', filename='main_pics/home-bg.jpg') }})"{% endblock %}
+{% block content %}
+    <main class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <h2 class="mb-3">Posts by: {{ user.username }} ({{ posts.total }})</h2>
+                    <div class="row">
+                        {% for post in posts.items %}
+                            <div class="col-sm-6">
+                                <div class="card" style="margin-bottom: 1em">
+                                    <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                                        <img src="{{ url_for('static', filename='post_pics/'+ post.image_file) }}"
+                                             class="img-fluid"/>
+                                        <a href="#!">
+                                            <div class="mask"
+                                                 style="background-color: rgba(251, 251, 251, 0.15);"></div>
+                                        </a>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ post.title }}</h5>
+                                        <p class="card-text small">{{ post.content[:100] }}...</p>
+                                        <div class="float-end"><a
+                                                href="{{ url_for('posts.display_post', post_id=post.id) }}"
+                                                class="text-primary btn">Read more ....</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <!-- Divider-->
+                    <hr class="my-4"/>
+                    <!-- Pager-->
+                    <div class="">
+                        {% if posts.has_prev %}
+                            <a class="btn btn-primary text-uppercase float-start"
+                               href="{{ url_for('users.user_posts', username=user.username, page=posts.prev_num) }}">←
+                                Newer
+                                Posts</a>
+                        {% endif %}
+                        {% if posts.has_next %}
+                            <a class="btn btn-primary text-uppercase float-end"
+                               href="{{ url_for('users.user_posts', username=user.username, page=posts.next_num) }}">Older
+                                Posts
+                                →</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock content %}
